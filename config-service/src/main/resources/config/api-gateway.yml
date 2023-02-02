@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: vehicles-service
+          predicates:
+            - Path=/vehicles/**
+          filters:
+            - RewritePath=/vehicles/(?<segment>/?.*), /$\{segment}
+          uri: lb://vehicle-service
+        - id: swagger
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+          uri: http://localhost:${server.port}
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: vehicles
+        url: /v3/api-docs/vehicles

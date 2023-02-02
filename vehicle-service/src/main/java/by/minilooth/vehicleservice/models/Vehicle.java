@@ -2,7 +2,7 @@ package by.minilooth.vehicleservice.models;
 
 import by.minilooth.vehicleservice.models.api.AbstractEntity;
 import by.minilooth.vehicleservice.common.enums.VehicleStatus;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 

@@ -2,7 +2,7 @@ package by.minilooth.vehicleservice.models;
 
 import by.minilooth.vehicleservice.models.api.AbstractEntity;
 import by.minilooth.vehicleservice.common.enums.MakeStatus;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
