@@ -10,6 +10,12 @@ spring:
           filters:
             - RewritePath=/vehicles/(?<segment>/?.*), /$\{segment}
           uri: lb://vehicle-service
+        - id: products-service
+          predicates:
+            - Path=/products/**
+          filters:
+            - RewritePath=/products/(?<segment>/?.*), /$\{segment}
+          uri: lb://product-service
         - id: swagger
           predicates:
             - Path=/v3/api-docs/**
@@ -32,7 +38,11 @@ management:
         include: "*"
 
 springdoc:
+  webjars:
+    prefix: ''
   swagger-ui:
     urls:
       - name: vehicles
         url: /v3/api-docs/vehicles
+      - name: products
+        url: /v3/api-docs/products

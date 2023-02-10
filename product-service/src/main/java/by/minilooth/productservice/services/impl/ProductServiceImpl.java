@@ -107,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findAll(ProductFilter filter, Pageable pageable) {
-        return productRepository.findAllByStatusNot(ProductStatus.REMOVED, Specification.anyOf(), pageable);
+        return productRepository.findAllByStatusNot(ProductStatus.REMOVED, Specification.where(null), pageable);
     }
 
     private Product save(Product product) {

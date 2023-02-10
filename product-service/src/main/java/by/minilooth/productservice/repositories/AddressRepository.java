@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    List<Address> findAllByStatusNotOrderByAddressDesc(AddressStatus status);
+    List<Address> findAllByStatusNotOrderByStreetDesc(AddressStatus status);
 
 }

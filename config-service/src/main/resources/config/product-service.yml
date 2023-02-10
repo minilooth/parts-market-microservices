@@ -1,6 +1,6 @@
 spring:
   application:
-    name: vehicle-service
+    name: product-service
   jpa:
     show-sql: true
     hibernate:
@@ -10,7 +10,7 @@ spring:
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:5432/vehicles?serverTimezone=UTC&useUnicode=TRUE&characterEncoding=UTF-8
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:5432/products?serverTimezone=UTC&useUnicode=TRUE&characterEncoding=UTF-8
 
 server:
   port: ${PORT}
