@@ -14,6 +14,8 @@ spring:
 
 server:
   port: ${PORT}
+  servlet:
+    context-path: /api/v1
 
 eureka:
   client:
@@ -22,3 +24,8 @@ eureka:
   instance:
     preferIpAddress: true
     instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+springdoc:
+  pre-loading-enabled: true
+  api-docs:
+    path: /api-docs

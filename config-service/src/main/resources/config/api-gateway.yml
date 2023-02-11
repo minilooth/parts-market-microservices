@@ -6,21 +6,29 @@ spring:
       routes:
         - id: vehicles-service
           predicates:
-            - Path=/vehicles/**
+            - Path=/api/v1/vehicles/**
           filters:
             - RewritePath=/vehicles/(?<segment>/?.*), /$\{segment}
+            - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_UNIQUE
           uri: lb://vehicle-service
         - id: products-service
           predicates:
-            - Path=/products/**
+            - Path=/api/v1/products/**
           filters:
             - RewritePath=/products/(?<segment>/?.*), /$\{segment}
+            - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_UNIQUE
           uri: lb://product-service
+        - id: swagger-config
+          predicates:
+            - Path=/api/v1/api-docs/swagger-config/**
+          filters:
+            - RewritePath=/api/v1/api-docs/swagger-config/(?<path>.*), /api/v1/$\{path}/api-docs/swagger-config
+          uri: http://localhost:${server.port}
         - id: swagger
           predicates:
-            - Path=/v3/api-docs/**
+            - Path=/api/v1/api-docs/**
           filters:
-            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+            - RewritePath=/api/v1/api-docs/(?<path>.*), /api/v1/$\{path}/api-docs
           uri: http://localhost:${server.port}
 
 server:
@@ -38,11 +46,15 @@ management:
         include: "*"
 
 springdoc:
+  pre-loading-enabled: true
+  api-docs:
+    path: /api/v1/api-docs
   webjars:
     prefix: ''
   swagger-ui:
+    path: /documentation/swagger-ui.html
     urls:
       - name: vehicles
-        url: /v3/api-docs/vehicles
+        url: /api/v1/api-docs/vehicles
       - name: products
-        url: /v3/api-docs/products
+        url: /api/v1/api-docs/products
