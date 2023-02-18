@@ -1,8 +1,7 @@
 package by.minilooth.vehicleservice.controllers;
 
 import by.minilooth.vehicleservice.dtos.MakeDto;
-import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
-import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.mappers.MakeMapper;
 import by.minilooth.vehicleservice.beans.Make;
 import by.minilooth.vehicleservice.services.MakeService;
@@ -18,8 +17,15 @@ import java.util.Optional;
 @RequestMapping("/make")
 public class MakeController {
 
-    @Autowired private MakeService makeService;
-    @Autowired private MakeMapper makeMapper;
+    private final MakeService makeService;
+    private final MakeMapper makeMapper;
+
+    @Autowired
+    public MakeController(MakeService makeService,
+                          MakeMapper makeMapper) {
+        this.makeService = makeService;
+        this.makeMapper = makeMapper;
+    }
 
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -31,7 +37,7 @@ public class MakeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Optional<Make> make = makeService.findById(id);
-        Optional<MakeDto> makeDto = make.map(entity -> makeMapper.toDto(entity));
+        Optional<MakeDto> makeDto = make.map(makeMapper::toDto);
         return ResponseEntity.ok(makeDto);
     }
 
@@ -45,7 +51,7 @@ public class MakeController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody MakeDto makeDto)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Make make = makeMapper.toEntity(makeDto);
         make = makeService.update(id, make);
         makeDto = makeMapper.toDto(make);
@@ -53,14 +59,14 @@ public class MakeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws VehicleApiException {
         Make make = makeService.deleteById(id);
         MakeDto makeDto = makeMapper.toDto(make);
         return ResponseEntity.ok(makeDto);
     }
 
     @PostMapping("/remove/{id}")
-    public ResponseEntity<?> removeById(@PathVariable Long id) throws ObjectNotFoundException {
+    public ResponseEntity<?> removeById(@PathVariable Long id) throws VehicleApiException {
         Make make = makeService.removeById(id);
         MakeDto makeDto = makeMapper.toDto(make);
         return ResponseEntity.ok(makeDto);
@@ -68,7 +74,7 @@ public class MakeController {
 
     @PostMapping("/activate/{id}")
     public ResponseEntity<?> activateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Make make = makeService.activateById(id);
         MakeDto makeDto = makeMapper.toDto(make);
         return ResponseEntity.ok(makeDto);
@@ -76,7 +82,7 @@ public class MakeController {
 
     @PostMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Make make = makeService.deactivateById(id);
         MakeDto makeDto = makeMapper.toDto(make);
         return ResponseEntity.ok(makeDto);

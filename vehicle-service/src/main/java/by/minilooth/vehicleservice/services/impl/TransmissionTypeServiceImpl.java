@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.beans.TransmissionType;
 import by.minilooth.vehicleservice.common.enums.TransmissionTypeStatus;
 import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.TransmissionTypeRepository;
 import by.minilooth.vehicleservice.services.TransmissionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ import java.util.Optional;
 @Transactional
 public class TransmissionTypeServiceImpl implements TransmissionTypeService {
 
-    @Autowired private TransmissionTypeRepository transmissionTypeRepository;
+    private final TransmissionTypeRepository transmissionTypeRepository;
+
+    @Autowired
+    public TransmissionTypeServiceImpl(TransmissionTypeRepository transmissionTypeRepository) {
+        this.transmissionTypeRepository = transmissionTypeRepository;
+    }
 
     @Override
     public TransmissionType create(TransmissionType request) {
@@ -30,7 +36,7 @@ public class TransmissionTypeServiceImpl implements TransmissionTypeService {
     }
 
     @Override
-    public TransmissionType update(Long id, TransmissionType request) throws ObjectNotFoundException, ImpossibleActionException {
+    public TransmissionType update(Long id, TransmissionType request) throws VehicleApiException {
         TransmissionType stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find transmission type with id %s", id)));
 
@@ -49,7 +55,7 @@ public class TransmissionTypeServiceImpl implements TransmissionTypeService {
     }
 
     @Override
-    public TransmissionType deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public TransmissionType deleteById(Long id) throws VehicleApiException {
         TransmissionType transmissionType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find transmission type with id %s", id)));
 
@@ -62,7 +68,7 @@ public class TransmissionTypeServiceImpl implements TransmissionTypeService {
     }
 
     @Override
-    public TransmissionType removeById(Long id) throws ObjectNotFoundException {
+    public TransmissionType removeById(Long id) throws VehicleApiException {
         TransmissionType transmissionType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find transmission type with id %s", id)));
 
@@ -72,7 +78,7 @@ public class TransmissionTypeServiceImpl implements TransmissionTypeService {
     }
 
     @Override
-    public TransmissionType activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public TransmissionType activateById(Long id) throws VehicleApiException {
         TransmissionType transmissionType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find transmission type with id %s", id)));
 
@@ -86,7 +92,7 @@ public class TransmissionTypeServiceImpl implements TransmissionTypeService {
     }
 
     @Override
-    public TransmissionType deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public TransmissionType deactivateById(Long id) throws VehicleApiException {
         TransmissionType transmissionType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find transmission type with id %s", id)));
 

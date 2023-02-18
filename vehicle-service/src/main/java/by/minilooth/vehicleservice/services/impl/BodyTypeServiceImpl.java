@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.beans.BodyType;
 import by.minilooth.vehicleservice.common.enums.BodyTypeStatus;
 import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.BodyTypeRepository;
 import by.minilooth.vehicleservice.services.BodyTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ import java.util.Optional;
 @Transactional
 public class BodyTypeServiceImpl implements BodyTypeService {
 
-    @Autowired private BodyTypeRepository bodyTypeRepository;
+    private final BodyTypeRepository bodyTypeRepository;
+
+    @Autowired
+    public BodyTypeServiceImpl(BodyTypeRepository bodyTypeRepository) {
+        this.bodyTypeRepository = bodyTypeRepository;
+    }
 
     @Override
     public BodyType create(BodyType request) {
@@ -30,7 +36,7 @@ public class BodyTypeServiceImpl implements BodyTypeService {
     }
 
     @Override
-    public BodyType update(Long id, BodyType request) throws ObjectNotFoundException, ImpossibleActionException {
+    public BodyType update(Long id, BodyType request) throws VehicleApiException {
         BodyType stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find body type with id %s", id)));
 
@@ -49,7 +55,7 @@ public class BodyTypeServiceImpl implements BodyTypeService {
     }
 
     @Override
-    public BodyType deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public BodyType deleteById(Long id) throws VehicleApiException {
         BodyType bodyType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find body type with id %s", id)));
 
@@ -62,7 +68,7 @@ public class BodyTypeServiceImpl implements BodyTypeService {
     }
 
     @Override
-    public BodyType removeById(Long id) throws ObjectNotFoundException {
+    public BodyType removeById(Long id) throws VehicleApiException {
         BodyType bodyType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find body type with id %s", id)));
 
@@ -72,7 +78,7 @@ public class BodyTypeServiceImpl implements BodyTypeService {
     }
 
     @Override
-    public BodyType activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public BodyType activateById(Long id) throws VehicleApiException {
         BodyType bodyType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find body type with id %s", id)));
 
@@ -86,7 +92,7 @@ public class BodyTypeServiceImpl implements BodyTypeService {
     }
 
     @Override
-    public BodyType deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public BodyType deactivateById(Long id) throws VehicleApiException {
         BodyType bodyType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find body type with id %s", id)));
 

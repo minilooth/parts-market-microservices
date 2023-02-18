@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
 import by.minilooth.vehicleservice.beans.Make;
 import by.minilooth.vehicleservice.common.enums.MakeStatus;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.MakeRepository;
 import by.minilooth.vehicleservice.services.MakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ import java.util.Optional;
 @Transactional
 public class MakeServiceImpl implements MakeService {
 
-    @Autowired private MakeRepository makeRepository;
+    private final MakeRepository makeRepository;
+
+    @Autowired
+    public MakeServiceImpl(MakeRepository makeRepository) {
+        this.makeRepository = makeRepository;
+    }
 
     @Override
     public Make create(Make request) {
@@ -30,7 +36,7 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make update(Long id, Make request) throws ObjectNotFoundException, ImpossibleActionException {
+    public Make update(Long id, Make request) throws VehicleApiException {
         Make stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
@@ -54,7 +60,7 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Make deleteById(Long id) throws VehicleApiException {
         Make make = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
@@ -68,7 +74,7 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make removeById(Long id) throws ObjectNotFoundException {
+    public Make removeById(Long id) throws VehicleApiException {
         Make make = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
@@ -78,7 +84,7 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Make activateById(Long id) throws VehicleApiException {
         Make make = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
@@ -92,7 +98,7 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Make deactivateById(Long id) throws VehicleApiException {
         Make make = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 

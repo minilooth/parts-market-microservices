@@ -2,8 +2,7 @@ package by.minilooth.vehicleservice.controllers;
 
 import by.minilooth.vehicleservice.beans.BodyType;
 import by.minilooth.vehicleservice.dtos.BodyTypeDto;
-import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
-import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.mappers.BodyTypeMapper;
 import by.minilooth.vehicleservice.services.BodyTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,15 @@ import java.util.Optional;
 @RequestMapping("/body-type")
 public class BodyTypeController {
 
-    @Autowired private BodyTypeService bodyTypeService;
-    @Autowired private BodyTypeMapper bodyTypeMapper;
+    private final BodyTypeService bodyTypeService;
+    private final BodyTypeMapper bodyTypeMapper;
+
+    @Autowired
+    public BodyTypeController(BodyTypeService bodyTypeService,
+                              BodyTypeMapper bodyTypeMapper) {
+        this.bodyTypeService = bodyTypeService;
+        this.bodyTypeMapper = bodyTypeMapper;
+    }
 
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -31,7 +37,7 @@ public class BodyTypeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Optional<BodyType> bodyType = bodyTypeService.findById(id);
-        Optional<BodyTypeDto> bodyTypeDto = bodyType.map(entity -> bodyTypeMapper.toDto(entity));
+        Optional<BodyTypeDto> bodyTypeDto = bodyType.map(bodyTypeMapper::toDto);
         return ResponseEntity.ok(bodyTypeDto);
     }
 
@@ -45,7 +51,7 @@ public class BodyTypeController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody BodyTypeDto bodyTypeDto)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         BodyType bodyType = bodyTypeMapper.toEntity(bodyTypeDto);
         bodyType = bodyTypeService.update(id, bodyType);
         bodyTypeDto = bodyTypeMapper.toDto(bodyType);
@@ -53,14 +59,14 @@ public class BodyTypeController {
     }
 
     @PostMapping("/remove/{id}")
-    public ResponseEntity<?> removeById(@PathVariable Long id) throws ObjectNotFoundException {
+    public ResponseEntity<?> removeById(@PathVariable Long id) throws VehicleApiException {
         BodyType bodyType = bodyTypeService.removeById(id);
         BodyTypeDto bodyTypeDto = bodyTypeMapper.toDto(bodyType);
         return ResponseEntity.ok(bodyTypeDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws VehicleApiException {
         BodyType bodyType = bodyTypeService.deleteById(id);
         BodyTypeDto bodyTypeDto = bodyTypeMapper.toDto(bodyType);
         return ResponseEntity.ok(bodyTypeDto);
@@ -68,7 +74,7 @@ public class BodyTypeController {
 
     @PostMapping("/activate/{id}")
     public ResponseEntity<?> activateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         BodyType bodyType = bodyTypeService.activateById(id);
         BodyTypeDto bodyTypeDto = bodyTypeMapper.toDto(bodyType);
         return ResponseEntity.ok(bodyTypeDto);
@@ -76,7 +82,7 @@ public class BodyTypeController {
 
     @PostMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         BodyType bodyType = bodyTypeService.deactivateById(id);
         BodyTypeDto bodyTypeDto = bodyTypeMapper.toDto(bodyType);
         return ResponseEntity.ok(bodyTypeDto);

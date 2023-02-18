@@ -13,7 +13,12 @@ import java.util.List;
 @Transactional
 public class ApplicabilityServiceImpl implements ApplicabilityService {
 
-    @Autowired private ApplicabilityRepository applicabilityRepository;
+    private final ApplicabilityRepository applicabilityRepository;
+
+    @Autowired
+    public ApplicabilityServiceImpl(ApplicabilityRepository applicabilityRepository) {
+        this.applicabilityRepository = applicabilityRepository;
+    }
 
     @Override
     public List<Applicability> findAllByProductId(Long productId) {

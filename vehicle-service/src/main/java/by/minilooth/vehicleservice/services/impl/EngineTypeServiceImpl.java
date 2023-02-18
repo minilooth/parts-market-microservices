@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.beans.EngineType;
 import by.minilooth.vehicleservice.common.enums.EngineTypeStatus;
 import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.EngineTypeRepository;
 import by.minilooth.vehicleservice.services.EngineTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ import java.util.Optional;
 @Transactional
 public class EngineTypeServiceImpl implements EngineTypeService {
 
-    @Autowired private EngineTypeRepository engineTypeRepository;
+    private final EngineTypeRepository engineTypeRepository;
+
+    @Autowired
+    public EngineTypeServiceImpl(EngineTypeRepository engineTypeRepository) {
+        this.engineTypeRepository = engineTypeRepository;
+    }
 
     @Override
     public EngineType create(EngineType request) {
@@ -30,7 +36,7 @@ public class EngineTypeServiceImpl implements EngineTypeService {
     }
 
     @Override
-    public EngineType update(Long id, EngineType request) throws ObjectNotFoundException, ImpossibleActionException {
+    public EngineType update(Long id, EngineType request) throws VehicleApiException {
         EngineType stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find engine type with id %s", id)));
 
@@ -49,7 +55,7 @@ public class EngineTypeServiceImpl implements EngineTypeService {
     }
 
     @Override
-    public EngineType deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public EngineType deleteById(Long id) throws VehicleApiException {
         EngineType engineType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find engine type with id %s", id)));
 
@@ -62,7 +68,7 @@ public class EngineTypeServiceImpl implements EngineTypeService {
     }
 
     @Override
-    public EngineType removeById(Long id) throws ObjectNotFoundException {
+    public EngineType removeById(Long id) throws VehicleApiException {
         EngineType engineType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find engine type with id %s", id)));
 
@@ -72,7 +78,7 @@ public class EngineTypeServiceImpl implements EngineTypeService {
     }
 
     @Override
-    public EngineType activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public EngineType activateById(Long id) throws VehicleApiException {
         EngineType engineType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find engine type with id %s", id)));
 
@@ -86,7 +92,7 @@ public class EngineTypeServiceImpl implements EngineTypeService {
     }
 
     @Override
-    public EngineType deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public EngineType deactivateById(Long id) throws VehicleApiException {
         EngineType engineType = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find engine type with id %s", id)));
 

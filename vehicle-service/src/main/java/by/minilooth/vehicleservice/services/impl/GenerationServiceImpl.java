@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
 import by.minilooth.vehicleservice.beans.Generation;
 import by.minilooth.vehicleservice.common.enums.GenerationStatus;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.GenerationRepository;
 import by.minilooth.vehicleservice.repositories.ModelRepository;
 import by.minilooth.vehicleservice.services.GenerationService;
@@ -18,11 +19,18 @@ import java.util.Optional;
 @Transactional
 public class GenerationServiceImpl implements GenerationService {
 
-    @Autowired private GenerationRepository generationRepository;
-    @Autowired private ModelRepository modelRepository;
+    private final GenerationRepository generationRepository;
+    private final ModelRepository modelRepository;
+
+    @Autowired
+    public GenerationServiceImpl(GenerationRepository generationRepository,
+                                 ModelRepository modelRepository) {
+        this.generationRepository = generationRepository;
+        this.modelRepository = modelRepository;
+    }
 
     @Override
-    public Generation create(Generation request) throws ObjectNotFoundException {
+    public Generation create(Generation request) throws VehicleApiException {
         Generation generation = new Generation();
 
         if (!modelRepository.existsById(request.getModel().getId())) {
@@ -40,7 +48,7 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation update(Long id, Generation request) throws ObjectNotFoundException, ImpossibleActionException {
+    public Generation update(Long id, Generation request) throws VehicleApiException {
         Generation stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
@@ -72,7 +80,7 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Generation deleteById(Long id) throws VehicleApiException {
         Generation generation = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
@@ -86,7 +94,7 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation removeById(Long id) throws ObjectNotFoundException {
+    public Generation removeById(Long id) throws VehicleApiException {
         Generation generation = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
@@ -96,7 +104,7 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Generation activateById(Long id) throws VehicleApiException {
         Generation generation = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
@@ -110,7 +118,7 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Generation deactivateById(Long id) throws VehicleApiException {
         Generation generation = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 

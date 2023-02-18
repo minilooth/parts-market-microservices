@@ -1,8 +1,7 @@
 package by.minilooth.vehicleservice.controllers;
 
 import by.minilooth.vehicleservice.dtos.GenerationDto;
-import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
-import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.mappers.GenerationMapper;
 import by.minilooth.vehicleservice.beans.Generation;
 import by.minilooth.vehicleservice.services.GenerationService;
@@ -18,8 +17,15 @@ import java.util.Optional;
 @RequestMapping("/generation")
 public class GenerationController {
 
-    @Autowired private GenerationService generationService;
-    @Autowired private GenerationMapper generationMapper;
+    private final GenerationService generationService;
+    private final GenerationMapper generationMapper;
+
+    @Autowired
+    public GenerationController(GenerationService generationService,
+                                GenerationMapper generationMapper) {
+        this.generationService = generationService;
+        this.generationMapper = generationMapper;
+    }
 
     @GetMapping("/all/{modelId}")
     public ResponseEntity<?> getAll(@PathVariable Long modelId) {
@@ -31,12 +37,12 @@ public class GenerationController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Optional<Generation> generation = generationService.findById(id);
-        Optional<GenerationDto> generationDto = generation.map(entity -> generationMapper.toDto(entity));
+        Optional<GenerationDto> generationDto = generation.map(generationMapper::toDto);
         return ResponseEntity.ok(generationDto);
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody GenerationDto generationDto) throws ObjectNotFoundException {
+    public ResponseEntity<?> create(@RequestBody GenerationDto generationDto) throws VehicleApiException {
         Generation generation = generationMapper.toEntity(generationDto);
         generation = generationService.create(generation);
         generationDto = generationMapper.toDto(generation);
@@ -45,7 +51,7 @@ public class GenerationController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody GenerationDto generationDto)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Generation generation = generationMapper.toEntity(generationDto);
         generation = generationService.update(id, generation);
         generationDto = generationMapper.toDto(generation);
@@ -53,14 +59,14 @@ public class GenerationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws VehicleApiException {
         Generation generation = generationService.deleteById(id);
         GenerationDto generationDto = generationMapper.toDto(generation);
         return ResponseEntity.ok(generationDto);
     }
 
     @PostMapping("/remove/{id}")
-    public ResponseEntity<?> removeById(@PathVariable Long id) throws ObjectNotFoundException {
+    public ResponseEntity<?> removeById(@PathVariable Long id) throws VehicleApiException {
         Generation generation = generationService.removeById(id);
         GenerationDto generationDto = generationMapper.toDto(generation);
         return ResponseEntity.ok(generationDto);
@@ -68,7 +74,7 @@ public class GenerationController {
 
     @PostMapping("/activate/{id}")
     public ResponseEntity<?> activateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Generation generation = generationService.activateById(id);
         GenerationDto generationDto = generationMapper.toDto(generation);
         return ResponseEntity.ok(generationDto);
@@ -76,7 +82,7 @@ public class GenerationController {
 
     @PostMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Generation generation = generationService.deactivateById(id);
         GenerationDto generationDto = generationMapper.toDto(generation);
         return ResponseEntity.ok(generationDto);

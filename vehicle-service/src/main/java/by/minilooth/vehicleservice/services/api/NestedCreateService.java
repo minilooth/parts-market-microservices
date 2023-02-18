@@ -1,9 +1,9 @@
 package by.minilooth.vehicleservice.services.api;
 
-import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 
 public interface NestedCreateService<T> {
 
-    T create(T entity) throws ObjectNotFoundException;
+    T create(T entity) throws VehicleApiException;
 
 }

@@ -4,6 +4,7 @@ import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
 import by.minilooth.vehicleservice.beans.Model;
 import by.minilooth.vehicleservice.common.enums.ModelStatus;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.repositories.MakeRepository;
 import by.minilooth.vehicleservice.repositories.ModelRepository;
 import by.minilooth.vehicleservice.services.ModelService;
@@ -18,11 +19,18 @@ import java.util.Optional;
 @Transactional
 public class ModelServiceImpl implements ModelService {
 
-    @Autowired private ModelRepository modelRepository;
-    @Autowired private MakeRepository makeRepository;
+    private final ModelRepository modelRepository;
+    private final MakeRepository makeRepository;
+
+    @Autowired
+    public ModelServiceImpl(ModelRepository modelRepository,
+                            MakeRepository makeRepository) {
+        this.modelRepository = modelRepository;
+        this.makeRepository = makeRepository;
+    }
 
     @Override
-    public Model create(Model request) throws ObjectNotFoundException {
+    public Model create(Model request) throws VehicleApiException {
         Model model = new Model();
 
         if (!makeRepository.existsById(request.getMake().getId())) {
@@ -38,7 +46,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model update(Long id, Model request) throws ObjectNotFoundException, ImpossibleActionException {
+    public Model update(Long id, Model request) throws VehicleApiException {
         Model stored = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
@@ -68,7 +76,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Model deleteById(Long id) throws VehicleApiException {
         Model model = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
@@ -82,7 +90,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model removeById(Long id) throws ObjectNotFoundException {
+    public Model removeById(Long id) throws VehicleApiException {
         Model model = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
@@ -92,7 +100,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Model activateById(Long id) throws VehicleApiException {
         Model model = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
@@ -106,7 +114,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public Model deactivateById(Long id) throws VehicleApiException {
         Model model = findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 

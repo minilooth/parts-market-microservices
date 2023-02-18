@@ -1,8 +1,7 @@
 package by.minilooth.vehicleservice.controllers;
 
 import by.minilooth.vehicleservice.dtos.VehicleDto;
-import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
-import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
+import by.minilooth.vehicleservice.exceptions.VehicleApiException;
 import by.minilooth.vehicleservice.mappers.VehicleMapper;
 import by.minilooth.vehicleservice.beans.Vehicle;
 import by.minilooth.vehicleservice.services.VehicleService;
@@ -18,8 +17,15 @@ import java.util.Optional;
 @RequestMapping("/vehicle")
 public class VehicleController {
 
-    @Autowired private VehicleService vehicleService;
-    @Autowired private VehicleMapper vehicleMapper;
+    private final VehicleService vehicleService;
+    private final VehicleMapper vehicleMapper;
+
+    @Autowired
+    public VehicleController(VehicleService vehicleService,
+                             VehicleMapper vehicleMapper) {
+        this.vehicleService = vehicleService;
+        this.vehicleMapper = vehicleMapper;
+    }
 
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -31,12 +37,12 @@ public class VehicleController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Optional<Vehicle> vehicle = vehicleService.findById(id);
-        Optional<VehicleDto> vehicleDto = vehicle.map(entity -> vehicleMapper.toDto(entity));
+        Optional<VehicleDto> vehicleDto = vehicle.map(vehicleMapper::toDto);
         return ResponseEntity.ok(vehicleDto);
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody VehicleDto vehicleDto) {
+    public ResponseEntity<?> create(@RequestBody VehicleDto vehicleDto) throws VehicleApiException {
         Vehicle vehicle = vehicleMapper.toEntity(vehicleDto);
         vehicle = vehicleService.create(vehicle);
         vehicleDto = vehicleMapper.toDto(vehicle);
@@ -45,7 +51,7 @@ public class VehicleController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody VehicleDto vehicleDto)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Vehicle vehicle = vehicleMapper.toEntity(vehicleDto);
         vehicle = vehicleService.update(id, vehicle);
         vehicleDto = vehicleMapper.toDto(vehicle);
@@ -53,14 +59,14 @@ public class VehicleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) throws ObjectNotFoundException, ImpossibleActionException {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws VehicleApiException {
         Vehicle vehicle = vehicleService.deleteById(id);
         VehicleDto vehicleDto = vehicleMapper.toDto(vehicle);
         return ResponseEntity.ok(vehicleDto);
     }
 
     @PostMapping("/remove/{id}")
-    public ResponseEntity<?> removeById(@PathVariable Long id) throws ObjectNotFoundException {
+    public ResponseEntity<?> removeById(@PathVariable Long id) throws VehicleApiException {
         Vehicle vehicle = vehicleService.removeById(id);
         VehicleDto vehicleDto = vehicleMapper.toDto(vehicle);
         return ResponseEntity.ok(vehicleDto);
@@ -68,7 +74,7 @@ public class VehicleController {
 
     @PostMapping("/activate/{id}")
     public ResponseEntity<?> activateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Vehicle vehicle = vehicleService.activateById(id);
         VehicleDto vehicleDto = vehicleMapper.toDto(vehicle);
         return ResponseEntity.ok(vehicleDto);
@@ -76,7 +82,7 @@ public class VehicleController {
 
     @PostMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateById(@PathVariable Long id)
-            throws ObjectNotFoundException, ImpossibleActionException {
+            throws VehicleApiException {
         Vehicle vehicle = vehicleService.deactivateById(id);
         VehicleDto vehicleDto = vehicleMapper.toDto(vehicle);
         return ResponseEntity.ok(vehicleDto);
