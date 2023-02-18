@@ -2,9 +2,14 @@ spring:
   application:
     name: vehicle-service
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     platform: postgres
     username: postgres
@@ -16,6 +21,9 @@ server:
   port: ${PORT}
   servlet:
     context-path: /api/v1
+  error:
+    include-message: always
+    include-binding-errors: always
 
 eureka:
   client:

@@ -8,7 +8,6 @@ import lombok.Data;
 public class CharacteristicDto implements BaseDto {
 
     private CharacteristicKeyDto id;
-    private ProductDto product;
     private ModificationDto modification;
     private String value;
 

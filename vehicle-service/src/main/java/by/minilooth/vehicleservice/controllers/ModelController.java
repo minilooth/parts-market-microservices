@@ -1,11 +1,13 @@
 package by.minilooth.vehicleservice.controllers;
 
 import by.minilooth.vehicleservice.dtos.ModelDto;
+import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
 import by.minilooth.vehicleservice.mappers.ModelEntityMapper;
-import by.minilooth.vehicleservice.models.Model;
+import by.minilooth.vehicleservice.beans.Model;
 import by.minilooth.vehicleservice.services.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +20,6 @@ public class ModelController {
 
     @Autowired private ModelService modelService;
     @Autowired private ModelEntityMapper modelMapper;
-
-    @GetMapping("/active/{makeId}")
-    public ResponseEntity<?> getAllActive(@PathVariable Long makeId) {
-        List<Model> models = modelService.findAllActive(makeId);
-        List<ModelDto> modelDtos = modelMapper.toDto(models);
-        return ResponseEntity.ok(modelDtos);
-    }
 
     @GetMapping("/all/{makeId}")
     public ResponseEntity<?> getAll(@PathVariable Long makeId) {
@@ -41,25 +36,25 @@ public class ModelController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ModelDto modelDto) {
+    public ResponseEntity<?> create(@RequestBody ModelDto modelDto) throws ObjectNotFoundException {
         Model model = modelMapper.toEntity(modelDto);
         model = modelService.create(model);
         modelDto = modelMapper.toDto(model);
-        return ResponseEntity.ok(modelDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(modelDto);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ModelDto modelDto)
-            throws ObjectNotFoundException {
+            throws ObjectNotFoundException, ImpossibleActionException {
         Model model = modelMapper.toEntity(modelDto);
         model = modelService.update(id, model);
         modelDto = modelMapper.toDto(model);
         return ResponseEntity.ok(modelDto);
     }
 
-    @PostMapping("/activate/{id}")
-    public ResponseEntity<?> activateById(@PathVariable Long id) throws ObjectNotFoundException {
-        Model model = modelService.activateById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Model model = modelService.deleteById(id);
         ModelDto modelDto = modelMapper.toDto(model);
         return ResponseEntity.ok(modelDto);
     }
@@ -67,6 +62,22 @@ public class ModelController {
     @PostMapping("/remove/{id}")
     public ResponseEntity<?> removeById(@PathVariable Long id) throws ObjectNotFoundException {
         Model model = modelService.removeById(id);
+        ModelDto modelDto = modelMapper.toDto(model);
+        return ResponseEntity.ok(modelDto);
+    }
+
+    @PostMapping("/activate/{id}")
+    public ResponseEntity<?> activateById(@PathVariable Long id)
+            throws ObjectNotFoundException, ImpossibleActionException {
+        Model model = modelService.activateById(id);
+        ModelDto modelDto = modelMapper.toDto(model);
+        return ResponseEntity.ok(modelDto);
+    }
+
+    @PostMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateById(@PathVariable Long id)
+            throws ObjectNotFoundException, ImpossibleActionException {
+        Model model = modelService.deactivateById(id);
         ModelDto modelDto = modelMapper.toDto(model);
         return ResponseEntity.ok(modelDto);
     }

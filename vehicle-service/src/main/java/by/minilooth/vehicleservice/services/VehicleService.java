@@ -1,13 +1,14 @@
 package by.minilooth.vehicleservice.services;
 
-import by.minilooth.vehicleservice.models.Vehicle;
-import by.minilooth.vehicleservice.services.api.CommonService;
+import by.minilooth.vehicleservice.beans.Vehicle;
+import by.minilooth.vehicleservice.services.api.CreateService;
+import by.minilooth.vehicleservice.services.api.ReadService;
+import by.minilooth.vehicleservice.services.api.UpdateDeleteService;
 
 import java.util.List;
 
-public interface VehicleService extends CommonService<Vehicle, Long> {
+public interface VehicleService extends UpdateDeleteService<Vehicle, Long>, CreateService<Vehicle>, ReadService<Vehicle> {
 
-    List<Vehicle> findAll();
-    List<Vehicle> findAllActive();
+    List<Vehicle> findAllByProductId(Long productId);
 
 }

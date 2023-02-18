@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: vehicle-service-test
+  config:
+    import: "optional:configserver:${CONFIG_SERVER:http://localhost:8088}"

@@ -1,7 +1,7 @@
 package by.minilooth.vehicleservice.mappers.api;
 
 import by.minilooth.vehicleservice.dtos.api.BaseDto;
-import by.minilooth.vehicleservice.models.api.BaseEntity;
+import by.minilooth.vehicleservice.beans.api.BaseEntity;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

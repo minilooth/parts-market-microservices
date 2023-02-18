@@ -1,7 +1,8 @@
 package by.minilooth.vehicleservice.services.impl;
 
+import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
-import by.minilooth.vehicleservice.models.Make;
+import by.minilooth.vehicleservice.beans.Make;
 import by.minilooth.vehicleservice.common.enums.MakeStatus;
 import by.minilooth.vehicleservice.repositories.MakeRepository;
 import by.minilooth.vehicleservice.services.MakeService;
@@ -19,33 +20,32 @@ public class MakeServiceImpl implements MakeService {
     @Autowired private MakeRepository makeRepository;
 
     @Override
-    public Make create(Make entity) {
+    public Make create(Make request) {
         Make make = new Make();
 
-        make.setName(entity.getName());
+        make.setName(request.getName().trim());
         make.setStatus(MakeStatus.ACTIVE);
 
         return save(make);
     }
 
     @Override
-    public Make update(Long id, Make entity) throws ObjectNotFoundException {
-        Make make = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Make with id %s", id)));
+    public Make update(Long id, Make request) throws ObjectNotFoundException, ImpossibleActionException {
+        Make stored = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
-        make.setName(entity.getName());
+        if (stored.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to update removed make with id %s", id));
+        }
 
-        return save(make);
-    }
+        stored.setName(request.getName().trim());
 
-    @Override
-    public List<Make> findAllActive() {
-        return makeRepository.findAllByStatusOrderByNameDesc(MakeStatus.ACTIVE);
+        return save(stored);
     }
 
     @Override
     public List<Make> findAll() {
-        return makeRepository.findAll();
+        return makeRepository.findAllByStatusNotOrderByName(MakeStatus.REMOVED);
     }
 
     @Override
@@ -54,20 +54,53 @@ public class MakeServiceImpl implements MakeService {
     }
 
     @Override
-    public Make removeById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, MakeStatus.REMOVED);
+    public Make deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Make make = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
+
+        if (!make.isEntityRemoved()) {
+            throw new ImpossibleActionException("Deleting make allowed only in REMOVED status");
+        }
+
+        makeRepository.delete(make);
+
+        return make;
     }
 
     @Override
-    public Make activateById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, MakeStatus.ACTIVE);
+    public Make removeById(Long id) throws ObjectNotFoundException {
+        Make make = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
+
+        make.setStatus(MakeStatus.REMOVED);
+
+        return save(make);
     }
 
-    private Make updateStatus(Long id, MakeStatus status) throws ObjectNotFoundException {
+    @Override
+    public Make activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
         Make make = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Make with id %s", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
 
-        make.setStatus(status);
+        if (make.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to activate removed make with id %s", id));
+        }
+
+        make.setStatus(MakeStatus.ACTIVE);
+
+        return save(make);
+    }
+
+    @Override
+    public Make deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Make make = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find make with id %s", id)));
+
+        if (make.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to deactivate removed make with id %s", id));
+        }
+
+        make.setStatus(MakeStatus.INACTIVE);
 
         return save(make);
     }

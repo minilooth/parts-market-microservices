@@ -1,144 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.6</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<groupId>by.minilooth</groupId>
-	<artifactId>vehicle-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>vehicle-service</name>
-	<description>vehicle-service</description>
+    <groupId>by.minilooth</groupId>
+    <artifactId>vehicle-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>vehicle-service</name>
+    <description>vehicle-service</description>
 
-	<properties>
-		<java.version>13</java.version>
-		<postgresql.version>42.5.1</postgresql.version>
-		<modelmapper.version>3.0.0</modelmapper.version>
-		<spring-cloud-dependencies.version>2021.0.5</spring-cloud-dependencies.version>
-		<springdoc-openapi.version>1.6.14</springdoc-openapi.version>
-	</properties>
+    <properties>
+        <spring.version>2.7.6</spring.version>
+        <java.version>13</java.version>
+        <postgresql.version>42.5.1</postgresql.version>
+        <modelmapper.version>3.0.0</modelmapper.version>
+        <spring-cloud-dependencies.version>2021.0.5</spring-cloud-dependencies.version>
+        <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <liquibase-maven-plugin.version>4.19.0</liquibase-maven-plugin.version>
+        <liquibase-hibernate5.version>4.19.0</liquibase-hibernate5.version>
+        <liquibase-postgresql.version>4.19.0</liquibase-postgresql.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd-HHmmssSSS</maven.build.timestamp.format>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
-		<!-- Spring Boot Starter-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
+        <!-- Spring Boot Starter-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
 
-		<!-- Setup Spring MVC & REST, use Embedded Tomcat -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+        <!-- Setup Spring MVC & REST, use Embedded Tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-		<!-- Spring Cloud starter -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-		</dependency>
+        <!-- Spring Cloud starter -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter</artifactId>
+        </dependency>
 
-		<!-- Spring Cloud OpenFeign starter -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
+        <!-- Spring Cloud OpenFeign starter -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
-		<!-- Spring Cloud Config starter -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
+        <!-- Spring Cloud Config starter -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
 
-		<!-- Eureka for service registration -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
+        <!-- Eureka for service registration -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
 
-<!--		<dependency>-->
-<!--			&lt;!&ndash; Advanced Message Queuing Protocol for messaging &ndash;&gt;-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-amqp</artifactId>-->
-<!--		</dependency>-->
+        <!--		<dependency>-->
+        <!--			&lt;!&ndash; Advanced Message Queuing Protocol for messaging &ndash;&gt;-->
+        <!--			<groupId>org.springframework.boot</groupId>-->
+        <!--			<artifactId>spring-boot-starter-amqp</artifactId>-->
+        <!--		</dependency>-->
 
-		<!-- Spring Data JPA starter -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+        <!-- Spring Data JPA starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
-		<!-- PostgreSQL Driver -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>${postgresql.version}</version>
-		</dependency>
+        <!-- Liquibase migrations -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-commercial</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<!-- Lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <!-- PostgreSQL Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
 
-		<!-- Model Mapper for mapping entities to dtos -->
-		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>${modelmapper.version}</version>
-		</dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
-		<!-- Swagger Documentation -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${springdoc-openapi.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Model Mapper for mapping entities to dtos -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
 
-		<!-- Spring Test starter -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- Swagger Documentation -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-	</dependencies>
+        <!-- Spring Test starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- Spring Cloud dependencies -->
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud-dependencies.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Cloud dependencies -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>${liquibase-maven-plugin.version}</version>
+                    <configuration>
+                        <propertyFile>target/classes/liquibase.properties</propertyFile>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.liquibase.ext</groupId>
+                            <artifactId>liquibase-hibernate5</artifactId>
+                            <version>${liquibase-hibernate5.version}</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.liquibase.ext</groupId>
+                            <artifactId>liquibase-postgresql</artifactId>
+                            <version>${liquibase-postgresql.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-data-jpa</artifactId>
+                            <version>${spring.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>javax.validation</groupId>
+                            <artifactId>validation-api</artifactId>
+                            <version>${validation-api.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
 </project>

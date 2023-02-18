@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 public class GenerationDto extends AbstractDto {
 
     private String name;
-    private ModelDto model;
+    private Long modelId;
     private GenerationStatus status;
-    private Long issuedFrom;
-    private Long issuedTo;
+    private Integer issuedFrom;
+    private Integer issuedTo;
 
 }

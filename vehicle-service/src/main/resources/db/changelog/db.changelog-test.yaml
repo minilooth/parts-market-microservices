@@ -1,0 +1,378 @@
+databaseChangeLog:
+  #  - includeAll:
+  #      path: db/changelog/generated/
+  - changeSet:
+      id: 1
+      author: m.moroz
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: applicability_pk
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: applicability_pk
+                  name: vehicle_id
+                  type: BIGINT
+            tableName: applicability
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: body_type_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+            tableName: body_type
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: engine_type_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+            tableName: engine_type
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: generation_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: issued_from
+                  type: BIGINT
+              - column:
+                  name: issued_to
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: model_id
+                  type: BIGINT
+            tableName: generation
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: make_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+            tableName: make
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: model_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: make_id
+                  type: BIGINT
+            tableName: model
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: transmission_type_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+            tableName: transmission_type
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: vehicle_pk
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: modification
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: power_hp
+                  type: FLOAT4
+              - column:
+                  constraints:
+                    nullable: false
+                  name: power_kw
+                  type: FLOAT4
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: volume
+                  type: FLOAT4
+              - column:
+                  constraints:
+                    nullable: false
+                  name: body_type_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: engine_type_id
+                  type: BIGINT
+              - column:
+                  name: generation_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: make_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: model_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: transmission_type_id
+                  type: BIGINT
+            tableName: vehicle
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: make_ak01
+            tableName: make
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk01
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: model
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: make_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk02
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: make
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: vehicle_id
+            baseTableName: applicability
+            constraintName: applicability_fk01
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: vehicle
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: make_id
+            baseTableName: model
+            constraintName: model_fk01
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: make
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: body_type_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk03
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: body_type
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: generation_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk04
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: generation
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: generation
+            constraintName: generation_fk01
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: model
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: engine_type_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk05
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: engine_type
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: transmission_type_id
+            baseTableName: vehicle
+            constraintName: vehicle_fk06
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: transmission_type
+            validate: true

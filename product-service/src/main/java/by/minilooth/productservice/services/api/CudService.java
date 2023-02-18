@@ -5,13 +5,13 @@ import by.minilooth.productservice.exceptions.ObjectNotFoundException;
 
 import java.util.Optional;
 
-public interface CudService<T> {
+public interface CudService<T, ID> {
 
     T create(T entity);
-    T update(Long id, T entity) throws ObjectNotFoundException, ImpossibleActionException;
-    Optional<T> findById(Long id);
-    T removeById(Long id) throws ObjectNotFoundException;
-    T activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException;
-    T deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException;
+    T update(ID id, T entity) throws ObjectNotFoundException, ImpossibleActionException;
+    Optional<T> findById(ID id);
+    T removeById(ID id) throws ObjectNotFoundException;
+    T activateById(ID id) throws ObjectNotFoundException, ImpossibleActionException;
+    T deactivateById(ID id) throws ObjectNotFoundException, ImpossibleActionException;
 
 }

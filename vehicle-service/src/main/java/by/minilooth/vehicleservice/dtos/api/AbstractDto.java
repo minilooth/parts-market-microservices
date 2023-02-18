@@ -1,20 +1,19 @@
 package by.minilooth.vehicleservice.dtos.api;
 
-import by.minilooth.vehicleservice.common.consts.DateConsts;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class AbstractDto implements BaseDto {
 
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConsts.DEFAULT_DATE_FORMAT)
-    private Date updatedAt;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime updatedAt;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConsts.DEFAULT_DATE_FORMAT)
-    private Date createdAt;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime createdAt;
 
 }

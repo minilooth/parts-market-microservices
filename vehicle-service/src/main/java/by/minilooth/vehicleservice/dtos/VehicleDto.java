@@ -13,9 +13,12 @@ public class VehicleDto extends AbstractDto {
     private ModelDto model;
     private GenerationDto generation;
     private String modification;
-    private EngineDto engine;
-    private TransmissionDto transmission;
-    private BodyDto body;
     private VehicleStatus status;
+    private EngineTypeDto engineType;
+    private Float volume;
+    private Float powerHp;
+    private Float powerKw;
+    private TransmissionTypeDto transmissionType;
+    private BodyTypeDto bodyType;
 
 }

@@ -1,9 +1,11 @@
 package by.minilooth.vehicleservice.services.impl;
 
+import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
-import by.minilooth.vehicleservice.models.Generation;
+import by.minilooth.vehicleservice.beans.Generation;
 import by.minilooth.vehicleservice.common.enums.GenerationStatus;
 import by.minilooth.vehicleservice.repositories.GenerationRepository;
+import by.minilooth.vehicleservice.repositories.ModelRepository;
 import by.minilooth.vehicleservice.services.GenerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,37 +19,51 @@ import java.util.Optional;
 public class GenerationServiceImpl implements GenerationService {
 
     @Autowired private GenerationRepository generationRepository;
+    @Autowired private ModelRepository modelRepository;
 
     @Override
-    public Generation create(Generation entity) {
+    public Generation create(Generation request) throws ObjectNotFoundException {
         Generation generation = new Generation();
 
-        generation.setName(entity.getName());
+        if (!modelRepository.existsById(request.getModel().getId())) {
+            throw new ObjectNotFoundException(String.format("Unable to find model with id %s",
+                    request.getModel().getId()));
+        }
+
+        generation.setName(request.getName().trim());
         generation.setStatus(GenerationStatus.ACTIVE);
-        generation.setModel(entity.getModel());
+        generation.setModel(modelRepository.getReferenceById(request.getModel().getId()));
+        generation.setIssuedFrom(request.getIssuedFrom());
+        generation.setIssuedTo(request.getIssuedTo());
 
         return save(generation);
     }
 
     @Override
-    public Generation update(Long id, Generation entity) throws ObjectNotFoundException {
-        Generation generation = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Generation with id %s", id)));
+    public Generation update(Long id, Generation request) throws ObjectNotFoundException, ImpossibleActionException {
+        Generation stored = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
-        generation.setName(entity.getName());
-        generation.setModel(entity.getModel());
+        if (stored.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to update removed generation with id %s", id));
+        }
 
-        return save(generation);
-    }
+        if (!modelRepository.existsById(request.getModel().getId())) {
+            throw new ObjectNotFoundException(String.format("Unable to find model with id %s",
+                    request.getModel().getId()));
+        }
 
-    @Override
-    public List<Generation> findAllActive(Long modelId) {
-        return generationRepository.findAllByModelIdAndStatusOrderByNameDesc(modelId, GenerationStatus.ACTIVE);
+        stored.setName(request.getName().trim());
+        stored.setModel(modelRepository.getReferenceById(request.getModel().getId()));
+        stored.setIssuedFrom(request.getIssuedFrom());
+        stored.setIssuedTo(request.getIssuedTo());
+
+        return save(stored);
     }
 
     @Override
     public List<Generation> findAll(Long modelId) {
-        return generationRepository.findAllByModelIdOrderByNameDesc(modelId);
+        return generationRepository.findAllByModelIdAndStatusNotOrderByIssuedFrom(modelId, GenerationStatus.REMOVED);
     }
 
     @Override
@@ -56,20 +72,53 @@ public class GenerationServiceImpl implements GenerationService {
     }
 
     @Override
-    public Generation removeById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, GenerationStatus.REMOVED);
+    public Generation deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Generation generation = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
+
+        if (!generation.isEntityRemoved()) {
+            throw new ImpossibleActionException("Deleting generation allowed only in REMOVED status");
+        }
+
+        generationRepository.delete(generation);
+
+        return generation;
     }
 
     @Override
-    public Generation activateById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, GenerationStatus.ACTIVE);
+    public Generation removeById(Long id) throws ObjectNotFoundException {
+        Generation generation = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
+
+        generation.setStatus(GenerationStatus.REMOVED);
+
+        return save(generation);
     }
 
-    private Generation updateStatus(Long id, GenerationStatus status) throws ObjectNotFoundException {
+    @Override
+    public Generation activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
         Generation generation = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Generation with id %s", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
 
-        generation.setStatus(status);
+        if (generation.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to activate removed generation with id %s", id));
+        }
+
+        generation.setStatus(GenerationStatus.ACTIVE);
+
+        return save(generation);
+    }
+
+    @Override
+    public Generation deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Generation generation = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find generation with id %s", id)));
+
+        if (generation.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to deactivate removed generation with id %s", id));
+        }
+
+        generation.setStatus(GenerationStatus.INACTIVE);
 
         return save(generation);
     }

@@ -1,14 +1,10 @@
 package by.minilooth.vehicleservice.services;
 
-import by.minilooth.vehicleservice.models.Make;
-import by.minilooth.vehicleservice.services.api.CommonService;
+import by.minilooth.vehicleservice.beans.Make;
+import by.minilooth.vehicleservice.services.api.CreateService;
+import by.minilooth.vehicleservice.services.api.ReadService;
+import by.minilooth.vehicleservice.services.api.UpdateDeleteService;
 
-import java.util.List;
-
-public interface MakeService extends CommonService<Make, Long> {
-
-    List<Make> findAll();
-    List<Make> findAllActive();
-
+public interface MakeService extends UpdateDeleteService<Make, Long>, CreateService<Make>, ReadService<Make> {
 
 }
