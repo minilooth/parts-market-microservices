@@ -1,8 +1,8 @@
 package by.minilooth.productservice.models.keys;
 
 import by.minilooth.productservice.models.api.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import lombok.Data;
 
 import java.io.Serializable;

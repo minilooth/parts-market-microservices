@@ -2,7 +2,7 @@ package by.minilooth.productservice.models;
 
 import by.minilooth.productservice.models.api.BaseEntity;
 import by.minilooth.productservice.models.keys.CharacteristicKey;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 

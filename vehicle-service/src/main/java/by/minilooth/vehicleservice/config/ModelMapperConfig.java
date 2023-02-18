@@ -20,7 +20,7 @@ public class ModelMapperConfig {
                 .setSkipNullEnabled(true)
                 .setPreferNestedProperties(false)
                 .setPropertyCondition(context -> (!(context.getSource() instanceof PersistentCollection)
-                        || ((PersistentCollection<?>)context.getSource()).wasInitialized()));
+                        || ((PersistentCollection)context.getSource()).wasInitialized()));
         return mapper;
     }
 

@@ -2,7 +2,7 @@ package by.minilooth.productservice.models;
 
 import by.minilooth.productservice.common.enums.ModificationStatus;
 import by.minilooth.productservice.models.api.AbstractEntity;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 

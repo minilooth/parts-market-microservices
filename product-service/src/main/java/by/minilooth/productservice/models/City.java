@@ -2,7 +2,7 @@ package by.minilooth.productservice.models;
 
 import by.minilooth.productservice.common.enums.CityStatus;
 import by.minilooth.productservice.models.api.AbstractEntity;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

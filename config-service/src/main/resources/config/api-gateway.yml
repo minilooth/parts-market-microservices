@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: vehicles-service
+          predicates:
+            - Path=/api/v1/vehicles/**
+          filters:
+            - RewritePath=/vehicles/(?<segment>/?.*), /$\{segment}
+            - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_UNIQUE
+          uri: lb://vehicle-service
+        - id: products-service
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - RewritePath=/products/(?<segment>/?.*), /$\{segment}
+            - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_UNIQUE
+          uri: lb://product-service
+        - id: swagger-config
+          predicates:
+            - Path=/api/v1/api-docs/swagger-config/**
+          filters:
+            - RewritePath=/api/v1/api-docs/swagger-config/(?<path>.*), /api/v1/$\{path}/api-docs/swagger-config
+          uri: http://localhost:${server.port}
+        - id: swagger
+          predicates:
+            - Path=/api/v1/api-docs/**
+          filters:
+            - RewritePath=/api/v1/api-docs/(?<path>.*), /api/v1/$\{path}/api-docs
+          uri: http://localhost:${server.port}
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  pre-loading-enabled: true
+  api-docs:
+    path: /api/v1/api-docs
+  webjars:
+    prefix: ''
+  swagger-ui:
+    path: /documentation/swagger-ui.html
+    urls:
+      - name: vehicles
+        url: /api/v1/api-docs/vehicles
+      - name: products
+        url: /api/v1/api-docs/products

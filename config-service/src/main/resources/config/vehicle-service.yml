@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: vehicle-service
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:5432/vehicles?serverTimezone=UTC&useUnicode=TRUE&characterEncoding=UTF-8
+
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+springdoc:
+  pre-loading-enabled: true
+  api-docs:
+    path: /api-docs

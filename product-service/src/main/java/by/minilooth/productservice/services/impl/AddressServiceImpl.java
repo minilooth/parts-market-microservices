@@ -49,7 +49,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> findAll() {
-        return addressRepository.findAllByStatusNotOrderByAddressDesc(AddressStatus.REMOVED);
+        return addressRepository.findAllByStatusNotOrderByStreetDesc(AddressStatus.REMOVED);
     }
 
     @Override
