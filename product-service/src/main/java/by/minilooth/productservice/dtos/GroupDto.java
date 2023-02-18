@@ -10,7 +10,8 @@ import lombok.EqualsAndHashCode;
 public class GroupDto extends AbstractDto {
 
     private String name;
+    private Long categoryId;
+    private Long subcategoryId;
     private GroupStatus status;
-    private SubcategoryDto subcategory;
 
 }

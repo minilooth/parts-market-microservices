@@ -2,7 +2,7 @@ package by.minilooth.vehicleservice.mappers;
 
 import by.minilooth.vehicleservice.dtos.VehicleDto;
 import by.minilooth.vehicleservice.mappers.api.AbstractMapper;
-import by.minilooth.vehicleservice.models.Vehicle;
+import by.minilooth.vehicleservice.beans.Vehicle;
 import org.springframework.stereotype.Component;
 
 @Component

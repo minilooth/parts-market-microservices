@@ -20,6 +20,5 @@ public class ProductDto extends AbstractDto {
     private String description;
     private ProductStatus status;
     private Set<CharacteristicDto> characteristics;
-    private Set<CrossDto> crosses;
 
 }

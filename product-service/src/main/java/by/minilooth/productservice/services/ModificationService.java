@@ -4,5 +4,5 @@ import by.minilooth.productservice.models.Modification;
 import by.minilooth.productservice.services.api.CudService;
 import by.minilooth.productservice.services.api.ReadService;
 
-public interface ModificationService extends CudService<Modification>, ReadService<Modification> {
+public interface ModificationService extends CudService<Modification, Long>, ReadService<Modification> {
 }

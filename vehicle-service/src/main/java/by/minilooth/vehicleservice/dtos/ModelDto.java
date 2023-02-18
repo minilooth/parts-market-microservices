@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 public class ModelDto extends AbstractDto {
 
     private String name;
-    private MakeDto make;
+    private Long makeId;
     private ModelStatus status;
 
 }

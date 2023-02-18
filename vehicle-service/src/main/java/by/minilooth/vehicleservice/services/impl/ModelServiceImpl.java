@@ -1,8 +1,10 @@
 package by.minilooth.vehicleservice.services.impl;
 
+import by.minilooth.vehicleservice.exceptions.ImpossibleActionException;
 import by.minilooth.vehicleservice.exceptions.ObjectNotFoundException;
-import by.minilooth.vehicleservice.models.Model;
+import by.minilooth.vehicleservice.beans.Model;
 import by.minilooth.vehicleservice.common.enums.ModelStatus;
+import by.minilooth.vehicleservice.repositories.MakeRepository;
 import by.minilooth.vehicleservice.repositories.ModelRepository;
 import by.minilooth.vehicleservice.services.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,37 +19,47 @@ import java.util.Optional;
 public class ModelServiceImpl implements ModelService {
 
     @Autowired private ModelRepository modelRepository;
+    @Autowired private MakeRepository makeRepository;
 
     @Override
-    public Model create(Model entity) {
+    public Model create(Model request) throws ObjectNotFoundException {
         Model model = new Model();
 
-        model.setName(entity.getName());
+        if (!makeRepository.existsById(request.getMake().getId())) {
+            throw new ObjectNotFoundException(String.format("Unable to find make with id %s",
+                    request.getMake().getId()));
+        }
+
+        model.setName(request.getName().trim());
         model.setStatus(ModelStatus.ACTIVE);
-        model.setMake(entity.getMake());
+        model.setMake(makeRepository.getReferenceById(request.getMake().getId()));
 
         return save(model);
     }
 
     @Override
-    public Model update(Long id, Model entity) throws ObjectNotFoundException {
-        Model model = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Model with id %s", id)));
+    public Model update(Long id, Model request) throws ObjectNotFoundException, ImpossibleActionException {
+        Model stored = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
-        model.setName(entity.getName());
-        model.setMake(entity.getMake());
+        if (stored.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to update removed model with id %s", id));
+        }
 
-        return save(model);
-    }
+        if (!makeRepository.existsById(request.getMake().getId())) {
+            throw new ObjectNotFoundException(String.format("Unable to find make with id %s",
+                    request.getMake().getId()));
+        }
 
-    @Override
-    public List<Model> findAllActive(Long makeId) {
-        return modelRepository.findAllByMakeIdAndStatusOrderByNameDesc(makeId, ModelStatus.ACTIVE);
+        stored.setName(request.getName().trim());
+        stored.setMake(makeRepository.getReferenceById(request.getMake().getId()));
+
+        return save(stored);
     }
 
     @Override
     public List<Model> findAll(Long makeId) {
-        return modelRepository.findAllByMakeIdOrderByNameDesc(makeId);
+        return modelRepository.findAllByMakeIdAndStatusNotOrderByName(makeId, ModelStatus.REMOVED);
     }
 
     @Override
@@ -56,20 +68,53 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model removeById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, ModelStatus.REMOVED);
+    public Model deleteById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Model model = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
+
+        if (!model.isEntityRemoved()) {
+            throw new ImpossibleActionException("Deleting model allowed only in REMOVED status");
+        }
+
+        modelRepository.delete(model);
+
+        return model;
     }
 
     @Override
-    public Model activateById(Long id) throws ObjectNotFoundException {
-        return updateStatus(id, ModelStatus.ACTIVE);
+    public Model removeById(Long id) throws ObjectNotFoundException {
+        Model model = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
+
+        model.setStatus(ModelStatus.REMOVED);
+
+        return save(model);
     }
 
-    private Model updateStatus(Long id, ModelStatus status) throws ObjectNotFoundException {
+    @Override
+    public Model activateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
         Model model = findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find Model with id %s", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
 
-        model.setStatus(status);
+        if (model.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to activate removed model with id %s", id));
+        }
+
+        model.setStatus(ModelStatus.ACTIVE);
+
+        return save(model);
+    }
+
+    @Override
+    public Model deactivateById(Long id) throws ObjectNotFoundException, ImpossibleActionException {
+        Model model = findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Unable to find model with id %s", id)));
+
+        if (model.isEntityRemoved()) {
+            throw new ImpossibleActionException(String.format("Unable to deactivate removed model with id %s", id));
+        }
+
+        model.setStatus(ModelStatus.INACTIVE);
 
         return save(model);
     }

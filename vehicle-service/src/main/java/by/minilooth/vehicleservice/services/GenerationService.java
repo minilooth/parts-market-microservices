@@ -1,13 +1,10 @@
 package by.minilooth.vehicleservice.services;
 
-import by.minilooth.vehicleservice.models.Generation;
-import by.minilooth.vehicleservice.services.api.CommonService;
+import by.minilooth.vehicleservice.beans.Generation;
+import by.minilooth.vehicleservice.services.api.NestedCreateService;
+import by.minilooth.vehicleservice.services.api.NestedReadService;
+import by.minilooth.vehicleservice.services.api.UpdateDeleteService;
 
-import java.util.List;
-
-public interface GenerationService extends CommonService<Generation, Long> {
-
-    List<Generation> findAll(Long makeId);
-    List<Generation> findAllActive(Long modelId);
+public interface GenerationService extends UpdateDeleteService<Generation, Long>, NestedCreateService<Generation>, NestedReadService<Generation, Long> {
 
 }

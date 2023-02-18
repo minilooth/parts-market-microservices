@@ -52,7 +52,7 @@ public class Product extends AbstractEntity {
     private ProductStatus status;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     private Set<Characteristic> characteristics = new HashSet<>();
 
     @ToString.Exclude
